@@ -34,7 +34,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Overview" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tRK-5f-g3z">
-                                                    <frame key="frameInset" minX="111" minY="41" width="263" height="30"/>
+                                                    <frame key="frameInset" minX="111" minY="41" width="263" height="112"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -55,11 +55,30 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view hidden="YES" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" id="mac-aX-D2c" userLabel="Network Error View">
+                                <frame key="frameInset" minY="61" width="375" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="warning" id="4nw-O8-CWq" userLabel="Network Error Image">
+                                        <frame key="frameInset" minX="119" minY="7" width="29" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Network Error" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SpU-hF-kpx" userLabel="Network Error Label">
+                                        <frame key="frameInset" minX="156" minY="7" width="114" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="tTg-SP-y8w"/>
                     <connections>
+                        <outlet property="networkErrorView" destination="mac-aX-D2c" id="G4f-9h-g4F"/>
                         <outlet property="tableView" destination="nic-Kq-sep" id="WI5-7j-nrj"/>
                     </connections>
                 </viewController>
@@ -141,6 +160,9 @@
             <point key="canvasLocation" x="73.5" y="136.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="warning" width="24" height="24"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

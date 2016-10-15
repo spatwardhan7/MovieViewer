@@ -11,7 +11,8 @@ import AFNetworking
 import MBProgressHUD
 
 class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    @IBOutlet weak var networkErrorView: UIView!
+    
     @IBOutlet weak var tableView: UITableView!
     
     var movies : [NSDictionary]?
@@ -36,7 +37,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         networkRequest()
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -60,7 +61,10 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         let urlString = "https://api.themoviedb.org/3/movie/\(self.endpoint!)?api_key=\(apiKey)"
         let url = URL(string : urlString)
         let request = URLRequest(url: url!)
-        let session = URLSession(configuration : URLSessionConfiguration.default,delegate: nil,delegateQueue: OperationQueue.main)
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 5.0
+        sessionConfig.timeoutIntervalForResource = 5.0
+        let session = URLSession(configuration : sessionConfig,delegate: nil,delegateQueue: OperationQueue.main)
         
         MBProgressHUD.showAdded(to: self.view, animated: true)
         
@@ -72,16 +76,22 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     self.tableView.reloadData()
                     
+                    self.hideNetworkErrorView(show: true)
                     MBProgressHUD.hide(for: self.view, animated: true)
                     // Tell the refreshControl to stop spinning
                     self.refreshControl.endRefreshing()
                 }
             } else {
-                
+                self.hideNetworkErrorView(show: false)
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
             
         });
         task.resume()
+    }
+    
+    func hideNetworkErrorView(show : Bool){
+        self.networkErrorView.isHidden = show
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -92,9 +102,23 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         let overview = movie?["overview"] as! String
         
         if let posterPath = movie?["poster_path"] as? String {
-            let posterBaseUrl = "http://image.tmdb.org/t/p/w500"
+            let posterBaseUrl = "http://image.tmdb.org/t/p/w92"
             let posterUrl = URL(string: posterBaseUrl + posterPath)
-            cell.posterView.setImageWith(posterUrl!)
+            let posterRequest = URLRequest(url: posterUrl!)
+            //cell.posterView.setImageWith(posterUrl!)
+            cell.posterView.setImageWith(posterRequest, placeholderImage: nil, success: {(request:URLRequest,response:HTTPURLResponse?, image:UIImage!) -> Void in
+                if image != nil {
+                    cell.posterView.alpha = 0.0
+                    cell.posterView.image = image
+                    UIView.animate(withDuration: 0.3 , animations: {() -> Void in
+                        cell.posterView.alpha = 1
+                    })
+                } else {
+                    cell.posterView.image = image
+                }
+                }, failure: {(request:URLRequest, response: HTTPURLResponse?, error: Error) -> Void in
+                    print("setImage AFNetworking received error")
+            })
         }
         else {
             // No poster image. Can either set to nil (no image) or a default movie poster image
@@ -104,16 +128,16 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
-        cell.overviewLabel.sizeToFit()
+        //cell.overviewLabel.sizeToFit()
         
         return cell
     }
-
     
-
-   
+    
+    
+    
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
