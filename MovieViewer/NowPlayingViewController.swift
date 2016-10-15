@@ -8,14 +8,21 @@
 
 import UIKit
 import AFNetworking
+import MBProgressHUD
 
 class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
     var movies : [NSDictionary]?
-    
     var endpoint : String!
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(self.handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        
+        return refreshControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +30,10 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         tableView.dataSource = self
         tableView.delegate = self
         
+        
+        tableView.insertSubview(refreshControl, at: 0)
+        
         networkRequest()
-
         // Do any additional setup after loading the view.
     }
 
@@ -41,6 +50,10 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    func handleRefresh(_ refreshControl: UIRefreshControl) {
+        networkRequest()
+    }
+    
     func networkRequest(){
         print ("endpoint: " , endpoint)
         let apiKey = "2bc27eecd1ba89ce134f4ff3d131d126"
@@ -49,7 +62,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         let request = URLRequest(url: url!)
         let session = URLSession(configuration : URLSessionConfiguration.default,delegate: nil,delegateQueue: OperationQueue.main)
         
-        
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         
         let task : URLSessionDataTask = session.dataTask(with: request,completionHandler: {(dataOrNil, response, error)  in
             if let data = dataOrNil {
@@ -58,7 +71,13 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
                     
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     self.tableView.reloadData()
+                    
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    // Tell the refreshControl to stop spinning
+                    self.refreshControl.endRefreshing()
                 }
+            } else {
+                
             }
             
         });
