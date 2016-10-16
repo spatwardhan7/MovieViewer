@@ -10,14 +10,15 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var networkErrorView: UIView!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    @IBOutlet weak var segmentedControl: UISegmentedControl!
     
+    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     var movies : [NSDictionary]?
     var filteredMovies : [NSDictionary]?
@@ -42,6 +43,8 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         tableView.dataSource = self
         tableView.delegate = self
         
+        collectionView.dataSource = self
+        
         createSearchBar()
         
         tableView.insertSubview(refreshControl, at: 0)
@@ -53,6 +56,10 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return safeNumberOfRowsInSection()
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -90,17 +97,43 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     
     func reloadData(){
         tableView.reloadData()
+        collectionView.reloadData()
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         searchBar.endEditing(true)
     }
     
+    func switchViews(index: Int){
+        var fromView : UIView
+        var toView : UIView
+        
+        if (index == 0){
+            fromView = self.collectionView
+            toView = self.tableView
+        }else {
+            fromView = self.tableView
+            toView = self.collectionView
+        }
+        
+        fromView.isHidden = true
+        toView.isHidden = false
+        
+        refreshControl.removeFromSuperview()
+        toView.addSubview(refreshControl)
+        
+        UIView.transition(from: fromView, to: toView, duration: 0.3, options: UIViewAnimationOptions.transitionFlipFromBottom, completion: nil)
+        
+    }
+    
+    
     @IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         if(segmentedControl.selectedSegmentIndex == 0) {
             print("Segmented Control value: 0")
+            switchViews(index: 0)
         } else {
             print("Segmented Control value: 1")
+            switchViews(index: 1)
         }
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -156,6 +189,45 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         self.networkErrorView.isHidden = show
     }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCellId", for: indexPath as IndexPath) as! CollectionViewCell
+        
+        let movie : NSDictionary!
+        if shouldShowSearchResults {
+            movie = filteredMovies?[indexPath.row]
+        } else {
+            movie = movies?[indexPath.row]
+        }
+        
+        if let posterPath = movie?["poster_path"] as? String {
+            let posterBaseUrl = "http://image.tmdb.org/t/p/w92"
+            let posterUrl = URL(string: posterBaseUrl + posterPath)
+            let posterRequest = URLRequest(url: posterUrl!)
+            
+            cell.posterImageCollectionViewCell.setImageWith(posterRequest, placeholderImage: nil, success: {(request:URLRequest,response:HTTPURLResponse?, image:UIImage!) -> Void in
+                if image != nil {
+                    cell.posterImageCollectionViewCell.alpha = 0.0
+                    cell.posterImageCollectionViewCell.image = image
+                    UIView.animate(withDuration: 0.3 , animations: {() -> Void in
+                        cell.posterImageCollectionViewCell.alpha = 1
+                    })
+                } else {
+                    cell.posterImageCollectionViewCell.image = image
+                }
+                }, failure: {(request:URLRequest, response: HTTPURLResponse?, error: Error) -> Void in
+                    print("setImage AFNetworking received error")
+            })
+        }
+        else {
+            // No poster image. Can either set to nil (no image) or a default movie poster image
+            // that you include as an asset
+            cell.posterImageCollectionViewCell.image = nil
+        }
+        
+        return cell
+    }
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NowPlayingCell", for: indexPath) as! NowPlayingViewCell
@@ -200,9 +272,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         
         return cell
     }
-    
-    
-    
     
     // MARK: - Navigation
     
