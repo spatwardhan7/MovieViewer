@@ -15,7 +15,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
-    
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -47,10 +47,21 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         
         createSearchBar()
         
+        initializeFlowLayout()
+        
+        self.navigationController?.navigationBar.barTintColor = UIColor.black
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
         tableView.insertSubview(refreshControl, at: 0)
         
         networkRequest()
         // Do any additional setup after loading the view.
+    }
+    
+    func initializeFlowLayout(){
+        flowLayout.minimumLineSpacing = 10
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.sectionInset = UIEdgeInsetsMake(10, 3, 0, 7)
     }
     
     override func didReceiveMemoryWarning() {
