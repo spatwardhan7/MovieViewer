@@ -32,7 +32,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     }()
     
     func createSearchBar(){
-        searchBar.showsCancelButton = true
+        searchBar.barTintColor = UIColor.black
         searchBar.delegate = self
         searchBar.placeholder = "Search movies"
     }
@@ -115,6 +115,15 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.endEditing(true)
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func showSearchBarCancelButton(show: Bool, searchBar : UISearchBar) {
+        searchBar.setShowsCancelButton(show, animated: true)
+    }
+    
+    
     func switchViews(index: Int){
         var fromView : UIView
         var toView : UIView
@@ -154,7 +163,11 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        shouldShowSearchResults = false
+        reloadData()
         searchBar.endEditing(true)
+        searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func handleRefresh(_ refreshControl: UIRefreshControl) {
