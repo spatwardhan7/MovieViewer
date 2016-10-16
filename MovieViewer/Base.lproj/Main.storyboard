@@ -40,6 +40,7 @@
                                         </view>
                                         <connections>
                                             <outlet property="posterImageCollectionViewCell" destination="lsj-1L-51b" id="5PE-nD-CkT"/>
+                                            <segue destination="GUS-rM-HkO" kind="push" identifier="collectionViewSeque" id="I1J-Zx-T8W"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -80,7 +81,7 @@
                                             <outlet property="overviewLabel" destination="tRK-5f-g3z" id="HO4-sE-fAl"/>
                                             <outlet property="posterView" destination="sGT-xR-7ou" id="fuE-Wq-pgV"/>
                                             <outlet property="titleLabel" destination="QAf-sE-A1X" id="kYn-h7-JVV"/>
-                                            <segue destination="GUS-rM-HkO" kind="push" id="eKX-Qb-0ig"/>
+                                            <segue destination="GUS-rM-HkO" kind="push" identifier="tableViewSegue" id="eKX-Qb-0ig"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -222,4 +223,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="I1J-Zx-T8W"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -280,9 +280,17 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPath(for: cell)
-        let movie = movies![(indexPath! as NSIndexPath).row]
+        var movie : NSDictionary!
+        
+        if(segue.identifier == "tableViewSegue"){
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPath(for: cell)
+            movie = movies![(indexPath! as NSIndexPath).row]
+        } else if (segue.identifier == "collectionViewSeque"){
+            let cell = sender as! UICollectionViewCell
+            let indexPath = collectionView.indexPath(for: cell)
+            movie = movies![(indexPath! as NSIndexPath).row]
+        }
         
         let detailViewController = segue.destination as! DetailViewController
         detailViewController.movie = movie
