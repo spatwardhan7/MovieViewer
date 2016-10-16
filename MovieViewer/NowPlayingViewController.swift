@@ -14,11 +14,11 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var movies : [NSDictionary]?
     var filteredMovies : [NSDictionary]?
     var endpoint : String!
-    let searchBar = UISearchBar()
     var shouldShowSearchResults = false
     
     lazy var refreshControl: UIRefreshControl = {
@@ -31,7 +31,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.showsCancelButton = true
         searchBar.delegate = self
         searchBar.placeholder = "Search movies"
-        self.navigationItem.titleView = searchBar
     }
     
     override func viewDidLoad() {
