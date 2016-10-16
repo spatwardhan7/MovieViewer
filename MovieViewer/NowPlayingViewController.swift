@@ -56,8 +56,11 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return safeNumberOfRowsInSection()
+    }
+    
+    func safeNumberOfRowsInSection() -> Int {
         if let movies = movies {
-            
             if shouldShowSearchResults{
                 return (filteredMovies?.count)!
             }
@@ -78,11 +81,15 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         
         if searchText != ""{
             shouldShowSearchResults = true
-            tableView.reloadData()
+            reloadData()
         } else {
             shouldShowSearchResults = false
-            tableView.reloadData()
+            reloadData()
         }
+    }
+    
+    func reloadData(){
+        tableView.reloadData()
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -99,7 +106,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         shouldShowSearchResults = true
         searchBar.endEditing(true)
-        tableView.reloadData()
+        reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -129,7 +136,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
                     JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary{
                     
                     self.movies = responseDictionary["results"] as? [NSDictionary]
-                    self.tableView.reloadData()
+                    self.reloadData()
                     
                     self.hideNetworkErrorView(show: true)
                     MBProgressHUD.hide(for: self.view, animated: true)
