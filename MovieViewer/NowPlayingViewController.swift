@@ -10,20 +10,29 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    @IBOutlet weak var networkErrorView: UIView!
+class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
     var movies : [NSDictionary]?
+    var filteredMovies : [NSDictionary]?
     var endpoint : String!
+    let searchBar = UISearchBar()
+    var shouldShowSearchResults = false
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(self.handleRefresh(_:)), for: UIControlEvents.valueChanged)
-        
         return refreshControl
     }()
+    
+    func createSearchBar(){
+        searchBar.showsCancelButton = true
+        searchBar.delegate = self
+        searchBar.placeholder = "Search movies"
+        self.navigationItem.titleView = searchBar
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +40,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         tableView.dataSource = self
         tableView.delegate = self
         
+        createSearchBar()
         
         tableView.insertSubview(refreshControl, at: 0)
         
@@ -45,10 +55,46 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let movies = movies {
-            return movies.count
+            
+            if shouldShowSearchResults{
+                return (filteredMovies?.count)!
+            }
+            else {
+                return movies.count
+            }
         }else {
             return 0
         }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredMovies = movies?.filter({(movie: NSDictionary) -> Bool in
+            let movieTitle = movie["title"] as! String
+            return movieTitle.lowercased().range(of: searchText.lowercased()) != nil
+            
+        })
+        
+        if searchText != ""{
+            shouldShowSearchResults = true
+            tableView.reloadData()
+        } else {
+            shouldShowSearchResults = false
+            tableView.reloadData()
+        }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.endEditing(true)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        shouldShowSearchResults = true
+        searchBar.endEditing(true)
+        tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
     }
     
     func handleRefresh(_ refreshControl: UIRefreshControl) {
@@ -97,7 +143,14 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NowPlayingCell", for: indexPath) as! NowPlayingViewCell
-        let movie = movies?[indexPath.row]
+        let movie : NSDictionary!
+        
+        if shouldShowSearchResults {
+            movie = filteredMovies?[indexPath.row]
+        } else {
+            movie = movies?[indexPath.row]
+        }
+        
         let title = movie?["title"] as! String
         let overview = movie?["overview"] as! String
         
@@ -105,7 +158,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
             let posterBaseUrl = "http://image.tmdb.org/t/p/w92"
             let posterUrl = URL(string: posterBaseUrl + posterPath)
             let posterRequest = URLRequest(url: posterUrl!)
-            //cell.posterView.setImageWith(posterUrl!)
+            
             cell.posterView.setImageWith(posterRequest, placeholderImage: nil, success: {(request:URLRequest,response:HTTPURLResponse?, image:UIImage!) -> Void in
                 if image != nil {
                     cell.posterView.alpha = 0.0
@@ -128,7 +181,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
-        //cell.overviewLabel.sizeToFit()
         
         return cell
     }
