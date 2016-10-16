@@ -16,6 +16,9 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
+    
     var movies : [NSDictionary]?
     var filteredMovies : [NSDictionary]?
     var endpoint : String!
@@ -86,6 +89,13 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.endEditing(true)
     }
     
+    @IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        if(segmentedControl.selectedSegmentIndex == 0) {
+            print("Segmented Control value: 0")
+        } else {
+            print("Segmented Control value: 1")
+        }
+    }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         shouldShowSearchResults = true
         searchBar.endEditing(true)
@@ -116,7 +126,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         let task : URLSessionDataTask = session.dataTask(with: request,completionHandler: {(dataOrNil, response, error)  in
             if let data = dataOrNil {
                 if let responseDictionary = try!
-                    JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary{NSLog("responses \(responseDictionary)")
+                    JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary{
                     
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     self.tableView.reloadData()

@@ -81,10 +81,25 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <navigationItem key="navigationItem" id="tTg-SP-y8w"/>
+                    <navigationItem key="navigationItem" id="tTg-SP-y8w">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="re0-n0-dbW">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="tE4-v0-bLD">
+                                <rect key="frame" x="276" y="8" width="83" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="" image="list"/>
+                                    <segment title="" image="grid"/>
+                                </segments>
+                                <connections>
+                                    <action selector="segmentedControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="QIe-Qe-kwR"/>
+                                </connections>
+                            </segmentedControl>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="networkErrorView" destination="mac-aX-D2c" id="G4f-9h-g4F"/>
                         <outlet property="searchBar" destination="f3I-QH-M79" id="DmK-YF-Osu"/>
+                        <outlet property="segmentedControl" destination="tE4-v0-bLD" id="GaM-xX-taL"/>
                         <outlet property="tableView" destination="nic-Kq-sep" id="WI5-7j-nrj"/>
                     </connections>
                 </viewController>
@@ -167,6 +182,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="grid" width="16" height="16"/>
+        <image name="list" width="16" height="16"/>
         <image name="warning" width="24" height="24"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
