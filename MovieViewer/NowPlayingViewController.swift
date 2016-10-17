@@ -34,7 +34,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     func createSearchBar(){
         searchBar.barTintColor = UIColor.black
         searchBar.delegate = self
-        searchBar.placeholder = "Search movies"
+        searchBar.placeholder = "Search"
     }
     
     override func viewDidLoad() {
