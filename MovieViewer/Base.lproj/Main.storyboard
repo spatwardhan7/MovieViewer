@@ -29,7 +29,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="100" height="140"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="116" height="126"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="140"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="lsj-1L-51b">
@@ -154,11 +154,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="lEr-pP-cRj">
-                                <frame key="frameInset" minX="16" minY="700" width="343" height="304"/>
+                                <frame key="frameInset" minX="16" minY="700" width="343" height="370"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <view alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" id="a50-80-J39">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="304"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" id="a50-80-J39">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="370"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="IRk-f0-6Xu">
@@ -198,12 +198,28 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Overview" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zPl-t6-Yq5">
-                                                <frame key="frameInset" minX="22" minY="102" width="298" height="34"/>
+                                                <frame key="frameInset" minX="22" minY="140" width="298" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="Lei-Gz-OEW">
+                                                <frame key="frameInset" minX="78" minY="94" width="42" height="38"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="rDu-cQ-sPY">
+                                                <frame key="frameInset" minX="135" minY="94" width="42" height="38"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="vE1-Ts-d5C">
+                                                <frame key="frameInset" minX="194" minY="94" width="42" height="38"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="EBu-XY-pIb">
+                                                <frame key="frameInset" minX="22" minY="94" width="42" height="38"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
@@ -214,6 +230,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="SLW-eM-vKi"/>
                     <connections>
+                        <outlet property="actor1ImageView" destination="EBu-XY-pIb" id="vyu-QW-icA"/>
+                        <outlet property="actor2ImageView" destination="Lei-Gz-OEW" id="eIH-MA-h83"/>
+                        <outlet property="actor3ImageView" destination="rDu-cQ-sPY" id="qkO-3i-aVB"/>
+                        <outlet property="actor4ImageView" destination="vE1-Ts-d5C" id="uL4-RP-8Nw"/>
                         <outlet property="infoView" destination="a50-80-J39" id="tkN-bN-r4h"/>
                         <outlet property="overviewLabel" destination="zPl-t6-Yq5" id="m6x-Xa-qMm"/>
                         <outlet property="percentLabel" destination="rTX-bq-2db" id="Txf-Cq-Vmb"/>

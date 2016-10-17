@@ -20,6 +20,10 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var percentLabel: UILabel!
     @IBOutlet weak var releaseLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var actor1ImageView: UIImageView!
+    @IBOutlet weak var actor2ImageView: UIImageView!
+    @IBOutlet weak var actor3ImageView: UIImageView!
+    @IBOutlet weak var actor4ImageView: UIImageView!
     
     
     var movie : NSDictionary!
@@ -27,25 +31,39 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        infoView.backgroundColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 0.8)
+        
+        
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height + 30)
         
         UIView.animate(withDuration: 0.5, delay: 0.5, options: UIViewAnimationOptions.curveEaseIn, animations: {
             self.scrollView.center.y = 600
             }, completion: nil)
         
+        circleImageView()
+        
         updateLabels(movie: movie)
         
         getMovieDetails()
         
+        getMovieCast(movie: movie)
+        
         // Do any additional setup after loading the view.
     }
     
-    func getMovieDetails(){
+    func circleImageView(){
+        actor1ImageView.asCircle()
+        actor2ImageView.asCircle()
+        actor3ImageView.asCircle()
+        actor4ImageView.asCircle()
+    }
+    
+    func getMovieCast(movie : NSDictionary){
         
-        var fullMovie =  NSDictionary()
+        var cast = [NSDictionary]()
         let movieId = movie["id"] as? Double
         let apiKey = "2bc27eecd1ba89ce134f4ff3d131d126"
-        let urlString = "https://api.themoviedb.org/3/movie/\(movieId!)?api_key=\(apiKey)&append_to_response=videos"
+        let urlString = "https://api.themoviedb.org/3/movie/\(movieId!)/credits?api_key=\(apiKey)"
         print(urlString)
         let url = URL(string : urlString)
         let request = URLRequest(url: url!)
@@ -54,7 +72,41 @@ class DetailViewController: UIViewController {
         sessionConfig.timeoutIntervalForResource = 5.0
         let session = URLSession(configuration : sessionConfig,delegate: nil,delegateQueue: OperationQueue.main)
         
-        //MBProgressHUD.showAdded(to: self.view, animated: true)
+        let task : URLSessionDataTask = session.dataTask(with: request,completionHandler: {(dataOrNil, response, error)  in
+            if let data = dataOrNil {
+                if let responseDictionary = try!
+                    JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary{
+                    
+                    cast = responseDictionary["cast"] as! [NSDictionary]
+                    print(cast)
+                    
+                    self.loadCastImages(cast: cast)
+                    
+                }
+            } else {
+                
+                
+            }
+            
+        });
+        task.resume()
+        
+        
+    }
+    
+    func getMovieDetails(){
+        
+        var fullMovie =  NSDictionary()
+        let movieId = movie["id"] as? Double
+        let apiKey = "2bc27eecd1ba89ce134f4ff3d131d126"
+        let urlString = "https://api.themoviedb.org/3/movie/\(movieId!)?api_key=\(apiKey)"
+        print(urlString)
+        let url = URL(string : urlString)
+        let request = URLRequest(url: url!)
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 5.0
+        sessionConfig.timeoutIntervalForResource = 5.0
+        let session = URLSession(configuration : sessionConfig,delegate: nil,delegateQueue: OperationQueue.main)
         
         let task : URLSessionDataTask = session.dataTask(with: request,completionHandler: {(dataOrNil, response, error)  in
             if let data = dataOrNil {
@@ -64,6 +116,7 @@ class DetailViewController: UIViewController {
                     fullMovie = responseDictionary
                     self.movie = fullMovie
                     self.showExtraDetails(movie: self.movie)
+                    
                 }
             } else {
                 
@@ -83,7 +136,32 @@ class DetailViewController: UIViewController {
         }
     }
     
+    func loadCastImages(cast : [NSDictionary]){
+        
+        let cast1 = cast[0]
+        let cast2 = cast[1]
+        let cast3 = cast[2]
+        let cast4 = cast[3]
+        
+        let cast1Pic = cast1["profile_path"]
+        let cast2Pic = cast2["profile_path"]
+        let cast3Pic = cast3["profile_path"]
+        let cast4Pic = cast4["profile_path"]
+        
+        
+        insertCastPic(picExtension: cast1Pic as! String, imageView: actor1ImageView)
+        insertCastPic(picExtension: cast2Pic as! String, imageView: actor2ImageView)
+        insertCastPic(picExtension: cast3Pic as! String, imageView: actor3ImageView)
+        insertCastPic(picExtension: cast4Pic as! String, imageView: actor4ImageView)
+    }
     
+    
+    func insertCastPic(picExtension: String, imageView : UIImageView){
+        let posterPath = picExtension
+        let posterBaseUrlSmallImage = "http://image.tmdb.org/t/p/w45"
+        let posterUrlSmallImage = URL(string: posterBaseUrlSmallImage + posterPath)
+        imageView.setImageWith(posterUrlSmallImage!)
+    }
     
     
     
@@ -122,6 +200,8 @@ class DetailViewController: UIViewController {
                 if smallImage != nil {
                     self.posterImageView.alpha = 0.0
                     self.posterImageView.image = smallImage
+                    
+                    self.actor1ImageView.image = smallImage
                     
                     UIView.animate(withDuration: 0.3 , animations: {() -> Void in
                         self.posterImageView.alpha = 1
@@ -169,5 +249,20 @@ class DetailViewController: UIViewController {
      // Pass the selected object to the new view controller.
      }
      */
+    
+}
+
+extension UIImageView{
+    
+    func asCircle(){
+        self.layer.cornerRadius = self.frame.width / 2;
+        self.layer.masksToBounds = true
+        self.layer.borderWidth = 0;
+        /*
+         self.backgroundColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 1.0)
+         self.isOpaque = true
+         self.alpha = 1.0
+         */
+    }
     
 }
