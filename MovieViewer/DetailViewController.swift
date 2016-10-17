@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AFNetworking
+import MBProgressHUD
 
 class DetailViewController: UIViewController {
     
@@ -15,6 +17,9 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var percentLabel: UILabel!
+    @IBOutlet weak var releaseLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
     
     
     var movie : NSDictionary!
@@ -22,14 +27,37 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
+        scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height + 30)
         
+        
+        
+        UIView.animate(withDuration: 0.5, delay: 0.3, options: UIViewAnimationOptions.curveEaseIn, animations: {
+            self.scrollView.center.y = 500
+            }, completion: nil)
+        
+        setDetails(movie: movie)
+        
+        // Do any additional setup after loading the view.
+    }
+    
+    func setDetails(movie : NSDictionary){
         let title = movie["title"] as? String
         let overview = movie["overview"] as? String
         
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let releaseDate = formatter.date(from: (movie["release_date"] as? String)!)
+        
+        formatter.dateFormat = "MMMM dd, yyyy"
+        let dateString = formatter.string(from: releaseDate!)
+        
+        releaseLabel.text = dateString
+        
+        let voteAverge = movie["vote_average"] as? Float
+        
+        percentLabel.text = "\(voteAverge! * 10) %"
         titleLabel.text = title
         overviewLabel.text = overview
-        
         overviewLabel.sizeToFit()
         
         if let posterPath = movie["poster_path"] as? String {
@@ -77,8 +105,6 @@ class DetailViewController: UIViewController {
             posterImageView.image = nil
         }
         
-        
-        // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
