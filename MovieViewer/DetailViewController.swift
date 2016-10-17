@@ -124,20 +124,21 @@ class DetailViewController: UIViewController {
     
     func loadCastImages(cast : [NSDictionary]){
         
-        let cast1 = cast[0]
-        let cast2 = cast[1]
-        let cast3 = cast[2]
-        let cast4 = cast[3]
+        if let cast1Pic =  cast[0]["profile_path"] as? String{
+            insertCastPic(picExtension: cast1Pic, imageView: actor1ImageView)
+        }
         
-        let cast1Pic = cast1["profile_path"]
-        let cast2Pic = cast2["profile_path"]
-        let cast3Pic = cast3["profile_path"]
-        let cast4Pic = cast4["profile_path"]
+        if let cast2Pic =  cast[1]["profile_path"] as? String{
+            insertCastPic(picExtension: cast2Pic , imageView: actor2ImageView)
+        }
         
-        insertCastPic(picExtension: cast1Pic as! String, imageView: actor1ImageView)
-        insertCastPic(picExtension: cast2Pic as! String, imageView: actor2ImageView)
-        insertCastPic(picExtension: cast3Pic as! String, imageView: actor3ImageView)
-        insertCastPic(picExtension: cast4Pic as! String, imageView: actor4ImageView)
+        if let cast3Pic = cast[2]["profile_path"] as? String{
+            insertCastPic(picExtension: cast3Pic , imageView: actor3ImageView)
+        }
+        
+        if let cast4Pic =  cast[3]["profile_path"] as? String{
+            insertCastPic(picExtension: cast4Pic , imageView: actor4ImageView)
+        }
     }
     
     
@@ -145,6 +146,7 @@ class DetailViewController: UIViewController {
         let posterPath = picExtension
         let posterBaseUrlSmallImage = "http://image.tmdb.org/t/p/w45"
         let posterUrlSmallImage = URL(string: posterBaseUrlSmallImage + posterPath)
+        imageView.isHidden = false
         imageView.setImageWith(posterUrlSmallImage!)
     }
     
