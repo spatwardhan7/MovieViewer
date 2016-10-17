@@ -29,17 +29,65 @@ class DetailViewController: UIViewController {
         
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height + 30)
         
-        
-        UIView.animate(withDuration: 0.4, delay: 0.4, options: UIViewAnimationOptions.curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.5, options: UIViewAnimationOptions.curveEaseIn, animations: {
             self.scrollView.center.y = 600
             }, completion: nil)
         
-        setDetails(movie: movie)
+        updateLabels(movie: movie)
+        
+        getMovieDetails()
         
         // Do any additional setup after loading the view.
     }
     
-    func setDetails(movie : NSDictionary){
+    func getMovieDetails(){
+        
+        var fullMovie =  NSDictionary()
+        let movieId = movie["id"] as? Double
+        let apiKey = "2bc27eecd1ba89ce134f4ff3d131d126"
+        let urlString = "https://api.themoviedb.org/3/movie/\(movieId!)?api_key=\(apiKey)&append_to_response=videos"
+        print(urlString)
+        let url = URL(string : urlString)
+        let request = URLRequest(url: url!)
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 5.0
+        sessionConfig.timeoutIntervalForResource = 5.0
+        let session = URLSession(configuration : sessionConfig,delegate: nil,delegateQueue: OperationQueue.main)
+        
+        //MBProgressHUD.showAdded(to: self.view, animated: true)
+        
+        let task : URLSessionDataTask = session.dataTask(with: request,completionHandler: {(dataOrNil, response, error)  in
+            if let data = dataOrNil {
+                if let responseDictionary = try!
+                    JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary{
+                    
+                    fullMovie = responseDictionary
+                    self.movie = fullMovie
+                    self.showExtraDetails(movie: self.movie)
+                }
+            } else {
+                
+                
+            }
+            
+        });
+        task.resume()
+    }
+    
+    func showExtraDetails(movie : NSDictionary){
+        let fullMovie = movie
+        
+        if let runTime = fullMovie["runtime"] as? Int{
+            let runTimeString = String(format: "%d hr %d mins", runTime/60, runTime % 60)
+            timeLabel.text = runTimeString
+        }
+    }
+    
+    
+    
+    
+    
+    func updateLabels(movie : NSDictionary){
         let title = movie["title"] as? String
         let overview = movie["overview"] as? String
         
