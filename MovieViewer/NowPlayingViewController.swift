@@ -10,7 +10,7 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UICollectionViewDataSource {
+class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet var tableView: UITableView!
@@ -44,6 +44,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         tableView.delegate = self
         
         collectionView.dataSource = self
+        collectionView.delegate = self
         
         createSearchBar()
         
