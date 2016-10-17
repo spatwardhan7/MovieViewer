@@ -62,7 +62,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     func initializeFlowLayout(){
         flowLayout.minimumLineSpacing = 10
         flowLayout.minimumInteritemSpacing = 0
-        flowLayout.sectionInset = UIEdgeInsetsMake(10, 3, 0, 7)
+        flowLayout.sectionInset = UIEdgeInsetsMake(10, 17, 0, 17)
     }
     
     override func didReceiveMemoryWarning() {

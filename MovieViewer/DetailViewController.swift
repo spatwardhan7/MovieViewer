@@ -31,7 +31,7 @@ class DetailViewController: UIViewController {
         
         
         UIView.animate(withDuration: 0.4, delay: 0.4, options: UIViewAnimationOptions.curveEaseIn, animations: {
-            self.scrollView.center.y = 500
+            self.scrollView.center.y = 600
             }, completion: nil)
         
         setDetails(movie: movie)
