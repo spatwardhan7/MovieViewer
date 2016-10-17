@@ -25,14 +25,12 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var actor3ImageView: UIImageView!
     @IBOutlet weak var actor4ImageView: UIImageView!
     
-    
     var movie : NSDictionary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         infoView.backgroundColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 0.8)
-        
         
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height + 30)
         
@@ -59,7 +57,6 @@ class DetailViewController: UIViewController {
     }
     
     func getMovieCast(movie : NSDictionary){
-        
         var cast = [NSDictionary]()
         let movieId = movie["id"] as? Double
         let apiKey = "2bc27eecd1ba89ce134f4ff3d131d126"
@@ -81,21 +78,14 @@ class DetailViewController: UIViewController {
                     print(cast)
                     
                     self.loadCastImages(cast: cast)
-                    
                 }
-            } else {
-                
-                
             }
             
         });
         task.resume()
-        
-        
     }
     
     func getMovieDetails(){
-        
         var fullMovie =  NSDictionary()
         let movieId = movie["id"] as? Double
         let apiKey = "2bc27eecd1ba89ce134f4ff3d131d126"
@@ -118,11 +108,7 @@ class DetailViewController: UIViewController {
                     self.showExtraDetails(movie: self.movie)
                     
                 }
-            } else {
-                
-                
             }
-            
         });
         task.resume()
     }
@@ -148,7 +134,6 @@ class DetailViewController: UIViewController {
         let cast3Pic = cast3["profile_path"]
         let cast4Pic = cast4["profile_path"]
         
-        
         insertCastPic(picExtension: cast1Pic as! String, imageView: actor1ImageView)
         insertCastPic(picExtension: cast2Pic as! String, imageView: actor2ImageView)
         insertCastPic(picExtension: cast3Pic as! String, imageView: actor3ImageView)
@@ -162,8 +147,6 @@ class DetailViewController: UIViewController {
         let posterUrlSmallImage = URL(string: posterBaseUrlSmallImage + posterPath)
         imageView.setImageWith(posterUrlSmallImage!)
     }
-    
-    
     
     func updateLabels(movie : NSDictionary){
         let title = movie["title"] as? String

@@ -113,6 +113,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.setShowsCancelButton(false, animated: true)
         searchBar.endEditing(true)
     }
     
@@ -123,7 +124,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     func showSearchBarCancelButton(show: Bool, searchBar : UISearchBar) {
         searchBar.setShowsCancelButton(show, animated: true)
     }
-    
     
     func switchViews(index: Int){
         var fromView : UIView
@@ -144,7 +144,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         toView.addSubview(refreshControl)
         
         UIView.transition(from: fromView, to: toView, duration: 0.3, options: UIViewAnimationOptions.transitionFlipFromBottom, completion: nil)
-        
     }
     
     
@@ -157,6 +156,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
             switchViews(index: 1)
         }
     }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         shouldShowSearchResults = true
         searchBar.endEditing(true)
@@ -196,6 +196,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     self.reloadData()
                     
+                    sleep(1)
                     self.hideNetworkErrorView(show: true)
                     MBProgressHUD.hide(for: self.view, animated: true)
                     // Tell the refreshControl to stop spinning
@@ -247,7 +248,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         else {
             // No poster image. Can either set to nil (no image) or a default movie poster image
             // that you include as an asset
-            cell.posterImageCollectionViewCell.image = nil
+            cell.posterImageCollectionViewCell.image = #imageLiteral(resourceName: "noposter")
         }
         
         return cell
@@ -264,11 +265,11 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
-    
+        
         cell?.contentView.backgroundColor = self.view.tintColor
         cell?.backgroundColor = self.view.tintColor
     }
-
+    
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
@@ -306,7 +307,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         else {
             // No poster image. Can either set to nil (no image) or a default movie poster image
             // that you include as an asset
-            cell.posterView.image = nil
+            cell.posterView.image = #imageLiteral(resourceName: "noposter")
         }
         
         cell.titleLabel.text = title
@@ -327,16 +328,23 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         if(segue.identifier == "tableViewSegue"){
             let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPath(for: cell)
-            movie = movies![(indexPath! as NSIndexPath).row]
+            if shouldShowSearchResults{
+                movie = filteredMovies![(indexPath! as NSIndexPath).row]
+            } else {
+                movie = movies![(indexPath! as NSIndexPath).row]
+            }
         } else if (segue.identifier == "collectionViewSeque"){
             let cell = sender as! UICollectionViewCell
             let indexPath = collectionView.indexPath(for: cell)
-            movie = movies![(indexPath! as NSIndexPath).row]
+            
+            if shouldShowSearchResults{
+                movie = filteredMovies![(indexPath! as NSIndexPath).row]
+            } else {
+                movie = movies![(indexPath! as NSIndexPath).row]
+            }
         }
         
         let detailViewController = segue.destination as! DetailViewController
         detailViewController.movie = movie
-        
     }
-    
 }
