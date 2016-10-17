@@ -26,23 +26,26 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] UI Animations
+- [x] Display Movie Cast Pictures on Details View 
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
+![Video Walkthrough](movieViewer-take1.gif)
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
+- This code had been developed only for iPhone 6/6s running in portrait mode
+- Displaying network error in the start of the video because I wanted to have only 1 demo video instead of a bunch of videos
+- I was stuck for the longest time switching between table view and collection view. 'weak' reference got the best of me
+- I also wanted to add a button to view the movie trailer but I did not find a pod compatible with xcode 8 
 
-Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright 2016 Saurabh Patwardhan
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
